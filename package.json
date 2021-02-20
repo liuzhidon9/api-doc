@@ -1,0 +1,21 @@
+{
+  "name": "showdoc",
+  "version": "1.0.0",
+  "description": "`参考：https://www.showdoc.com.cn/page/741656402509783`",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"node app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "argparse": "^2.0.1",
+    "axios": "^0.21.1",
+    "js-yaml": "^4.0.0"
+  }
+}
