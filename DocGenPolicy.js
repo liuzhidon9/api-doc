@@ -170,7 +170,7 @@ class DocGenPolicy {
                     this[policyName](paramArr)
                 })
 
-                let dir = path.resolve(__dirname, `api-doc`, this.cat_name)
+                let dir = path.resolve(process.cwd(), `api-doc`, this.cat_name)
                 let filePath = path.resolve(dir, this.page_title + '.md')
                 if (!fs.existsSync(dir)) {
                     fs.mkdirSync(dir, { recursive: true })
@@ -180,7 +180,7 @@ class DocGenPolicy {
                 }
                 //遍历templates里的事件，通过它们的get方法可以获取到根据注释生成的文档
                 for (const key in this.templates) {
-                    fs.appendFileSync(filePath, this.templates[key].get())
+                    fs.appendFileSync(path.resolve(process.cwd(),filePath), this.templates[key].get())
                     this.page_content += this.templates[key].get()
                     this.templates[key].clear()
                 }
