@@ -148,7 +148,7 @@ class DocGenPolicy {
         })
     }
     _generator(filePath) {
-        let docReg = /[/][*]{2}\s*api-doc((?![/][*]{2})(.|\s))*[*][/]/img
+        let docReg = /[/][*]{2}\s*api-doc\s*(@.*\s{1,2})*[*][/]/img
         let lineReg = /@.*/img
         fs.readFile(filePath, (err, data) => {
             if (err) throw err

@@ -11,12 +11,12 @@ const parser = new ArgumentParser({
 parser.add_argument('-f', '--file', { type: 'string', help: 'config file path' });
 // 获取配置文件数据
 let configFilePath = parser.parse_args().file ? parser.parse_args().file : 'config.yml'
-let config 
+let config
 try {
-    config = yaml.load(fs.readFileSync(path.resolve(process.cwd(),configFilePath), 'utf8'));
+    config = yaml.load(fs.readFileSync(path.resolve(process.cwd(), configFilePath), 'utf8'));
     config.exclude = config.exclude ? config.exclude : []
 } catch (e) {
-     console.log(e);
+    console.log(e);
 }
 
 DocGenPolicy.clearLocalDoc()//每次运行都删除之前的本地文档
@@ -36,7 +36,7 @@ function scanFiles(relativePath) {
             scanFiles(fPath)
             return
         }
-        console.log('正在解析'+file+'文件');
+        console.log('正在扫描' + file + '文件');
         docGenPolicy._generator(fPath)
     })
 
