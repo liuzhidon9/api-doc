@@ -36,6 +36,7 @@ function scanFiles(relativePath) {
             scanFiles(fPath)
             return
         }
+        console.log('正在解析'+file+'文件');
         docGenPolicy._generator(fPath)
     })
 

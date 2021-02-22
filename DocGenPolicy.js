@@ -16,14 +16,14 @@ const {
 
 const jsonFormat = require('json-format')
 // formatJsonStr 格式化json字符串
-function formatJsonStr(jsonStr){
+function formatJsonStr(jsonStr) {
     let json = JSON.parse(jsonStr)
     let formatJson = jsonFormat(json)
     return formatJson
 }
 
 class DocGenPolicy {
-    constructor(api_key, api_token,server) {
+    constructor(api_key, api_token, server) {
         this.api_key = api_key
         this.api_token = api_token
         this.server = server
@@ -131,16 +131,20 @@ class DocGenPolicy {
         }
     }
     // 更新线上文档
-     _updateOnlineDoc(){
-        axios.post(this.server,{
-            api_key:this.api_key,
-            api_token:this.api_token,
-            cat_name:this.cat_name,
-            page_title:this.page_title,
-            page_content:this.page_content,
-            s_number:this.s_number
-        }).then(res=>{
-            console.log(res);
+    _updateOnlineDoc(page_title) {
+        console.log(`正在更新线上文档：${page_title}`);
+        axios.post(this.server, {
+            api_key: this.api_key,
+            api_token: this.api_token,
+            cat_name: this.cat_name,
+            page_title: this.page_title,
+            page_content: this.page_content,
+            s_number: this.s_number
+        }).then(res => {
+            if (res.data.error_code !== 0) { console.log(`线上文档：${page_title}>更新失败`); return }
+            console.log(`线上文档：${page_title}>更新成功！`);
+        }).catch(error => {
+            console.log(`线上文档：${page_title}>更新失败`, error.message);
         })
     }
     _generator(filePath) {
@@ -155,7 +159,7 @@ class DocGenPolicy {
             docArr.forEach(doc => {
                 sectionArr.push(doc.match(lineReg))
             })
-            console.log('sectionArr', sectionArr);
+            // console.log('sectionArr', sectionArr);
             sectionArr.forEach(section => {
                 let lineArr = []
                 lineArr = section
@@ -166,7 +170,7 @@ class DocGenPolicy {
                     this[policyName](paramArr)
                 })
 
-                let dir = path.resolve(__dirname, `api-doc`,this.cat_name)
+                let dir = path.resolve(__dirname, `api-doc`, this.cat_name)
                 let filePath = path.resolve(dir, this.page_title + '.md')
                 if (!fs.existsSync(dir)) {
                     fs.mkdirSync(dir, { recursive: true })
@@ -177,10 +181,10 @@ class DocGenPolicy {
                 //遍历templates里的事件，通过它们的get方法可以获取到根据注释生成的文档
                 for (const key in this.templates) {
                     fs.appendFileSync(filePath, this.templates[key].get())
-                    this.page_content+=this.templates[key].get()
+                    this.page_content += this.templates[key].get()
                     this.templates[key].clear()
                 }
-                this._updateOnlineDoc()
+                this._updateOnlineDoc(this.page_title)
                 this.page_content = null
                 this.templates = {}
             })
