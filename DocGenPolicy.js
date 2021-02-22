@@ -14,6 +14,13 @@ const {
     remarkTemplate,
 } = require("./util")
 
+const jsonFormat = require('json-format')
+// formatJsonStr 格式化json字符串
+function formatJsonStr(jsonStr){
+    let json = JSON.parse(jsonStr)
+    let formatJson = jsonFormat(json)
+    return formatJson
+}
 
 class DocGenPolicy {
     constructor(api_key, api_token,server) {
@@ -78,14 +85,16 @@ class DocGenPolicy {
         this.templates.requestParamTemplate.set(name, require, type, description)
     }
     json_param(paramArr) {
-        let json = paramArr[1]
+        let jsonStr = paramArr[1]
+        let json = formatJsonStr(jsonStr)
         if (!this.templates.jsonRequestTemplate) {
             this.templates.jsonRequestTemplate = jsonRequestTemplate
         }
         this.templates.jsonRequestTemplate.set(json)
     }
     return(paramArr) {
-        let json = paramArr[1]
+        let jsonStr = paramArr[1]
+        let json = formatJsonStr(jsonStr)
         if (!this.templates.jsonReturnTemplate) {
             this.templates.jsonReturnTemplate = jsonReturnTemplate
         }
@@ -135,7 +144,7 @@ class DocGenPolicy {
         })
     }
     _generator(filePath) {
-        let docReg = /[/][*]{2}\n.*\s*api-doc((?![/][*]{2})(.|\n))*[*][/]/img
+        let docReg = /[/][*]{2}\s*api-doc((?![/][*]{2})(.|\s))*[*][/]/img
         let lineReg = /@.*/img
         fs.readFile(filePath, (err, data) => {
             if (err) throw err

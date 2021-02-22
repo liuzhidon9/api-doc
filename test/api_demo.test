@@ -1,20 +1,30 @@
 
 	
 
-	/**
-	 api-doc
-	 @catalog 测试文档/用户相关
-	 @title 用户注册
-	 @description 用户注册的接口
-	 @method post
-	 @url https://www.showdoc.com.cn/home/user/login
-	 @param username 必选 string 用户名  
-	 @param password 必选 string 密码  
-	 @param name 可选 string 用户昵称  
-	 @return {"error_code":0,"data":{"uid":"1","username":"12154545","name":"吴系挂","groupid":2,"reg_time":"1436864169","last_login_time":"0"}}
-	 @return_param groupid int 用户组id
-	 @return_param name string 用户昵称
-	 @error_code 10000 success
-	 @remark 这里是备注信息
-	 @number 99
-	*/
+/**
+ api-doc
+ @catalog user
+ @title 用户注册
+ @description 用户注册的接口
+ @method post
+ @url https://www.showdoc.com.cn/home/user/login
+ @param username 必选 string 用户名  
+ @param password 必选 string 密码  
+ @param name 可选 string 用户昵称  
+ @return {"error_code":0,"data":{"uid":"1","username":"12154545","name":"吴系挂","groupid":2,"reg_time":"1436864169","last_login_time":"0"}}
+ @return_param groupid int 用户组id
+ @return_param name string 用户昵称
+ @error_code 10000 success
+ @remark 这里是备注信息
+ @number 99
+*/
+/**
+api-doc
+@catalog user
+@title 获取验证码
+@description 通过手机号获取验证码
+@url /user/send_code
+@method POST
+@json_param {"phone_num":"13826031871"}
+@param phone_num 必选 string 手机号
+*/
