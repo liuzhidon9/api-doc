@@ -26,7 +26,8 @@ npm run start
 | api_key   | 是   | string | api_key，认证凭证。登录 showdoc，进入具体项目后，点击右上角的”项目设置”-“开放 API”便可看到 |
 | api_token | 是   | string | 同上                                                                                       |
 | server    | 是   | string | showdoc 服务器地址                                                                         |
-| path      | 是   | string | 文件扫描路径                                                                               |
+| path      | 是   | string | 文件扫描的相对路径                                                                               |
+| output    | 否   | string | 在本地生成文档的相对路径，默认在 ./api-doc 目录下生成                                          |
 | exclude   | 否   | arrary | 需要要忽略的文件夹或文件                                                                   |
 
 **语法说明 ：**
@@ -61,9 +62,9 @@ npm run start
 | @url          | 接口 URL。不要在 URL 中使用&符号来传递参数。传递参数请写在参数表格中                                                                 |
 | @header       | 可选。header 说明。一行注释对应着表格的一行。用空格或者 tab 符号来隔开每一列信息。                                                   |
 | @param        | 参数表格说明。一行注释对应着表格的一行。用空格或者 tab 符号来隔开每一列信息。                                                        |
-| @json_param   | 可选。当请求参数是 json 的时候，可增加此标签。请把 json 内容压缩在同一行内。                                                         |
+| @json_param   | 可选。当请求参数是 json 的时候，可增加此标签。请把 json 内容压缩在同一行内，注意：json内容不能有注释                                                         |
 | @return       | 返回内容。请把返回内容压缩在同一行内。如果是 json，程序会自动进行格式化展示。 如果是非 json 内容，则原样展示。                       |
 | @return_param | 返回参数的表格说明。一行注释对应着表格的一行。用空格或者 tab 符号来隔开每一列信息。                                                  |
 | @remark       | 备注信息                                                                                                                             |
-| @error_code    | 错误码，一行注释对应着表格的一行，用空格来隔开每一列信息。                                                                           |
+| @error_code   | 错误码，一行注释对应着表格的一行，用空格来隔开每一列信息。                                                                           |
 | @number       | 可选。文档的序号。                                                                                                                   |

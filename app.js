@@ -1,7 +1,7 @@
 const fs = require('fs')
 const path = require('path')
 const yaml = require('js-yaml');
-const DocGenPolicy = require('./DocGenPolicy')
+const DocGenerator = require('./DocGenerator')
 const { ArgumentParser } = require('argparse');
 
 // 读取命令行参数
@@ -15,12 +15,16 @@ let config
 try {
     config = yaml.load(fs.readFileSync(path.resolve(process.cwd(), configFilePath), 'utf8'));
     config.exclude = config.exclude ? config.exclude : []
+    config.output = config.output ? config.output : './api-doc'
 } catch (e) {
     console.log(e);
 }
+//每次运行都删除之前的本地文档
+// if (fs.existsSync(config.output)) {
+//     fs.rmdirSync(config.output, { recursive: true })
+// }
 
-DocGenPolicy.clearLocalDoc()//每次运行都删除之前的本地文档
-let docGenPolicy = new DocGenPolicy(config.api_key, config.api_token, config.server)
+let docGenerator = new DocGenerator(config.api_key, config.api_token, config.server,config.output)
 
 function scanFiles(relativePath) {
     let files = fs.readdirSync(relativePath);
@@ -37,7 +41,7 @@ function scanFiles(relativePath) {
             return
         }
         console.log('正在扫描' + file + '文件');
-        docGenPolicy._generator(fPath)
+        docGenerator.generateByFile(fPath)
     })
 
 }
