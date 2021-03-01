@@ -34,12 +34,14 @@
 
 | 参数名    | 必选 | 类型   | 说明                                                                                       |
 | :-------- | :--- | :----- | ------------------------------------------------------------------------------------------ |
-| api_key   | 是   | string | api_key，认证凭证。登录 showdoc，进入具体项目后，点击右上角的”项目设置”-“开放 API”便可看到 |
-| api_token | 是   | string | 同上                                                                                       |
-| server    | 是   | string | showdoc 服务器地址                                                                         |
+| api_key   | 否   | string | api_key，认证凭证。登录 showdoc，进入具体项目后，点击右上角的”项目设置”-“开放 API”便可看到 |
+| api_token | 否   | string | 同上                                                                                       |
+| server    | 否   | string | showdoc 服务器地址                                                                         |
 | path      | 是   | string | 文件扫描的绝对或相对路径                                                                         |
 | output    | 否   | string | 在本地生成文档的绝对或相对路径，默认在 ./api-doc 目录下生成                                      |
 | exclude   | 否   | arrary | 需要要忽略的文件夹或文件                                                                   |
+
+> ps：如果需要使用showdoc提供的线上文档管理服务，则api_key、api_token、server这三个参数是必填的。
 
 **语法说明 ：**
 
