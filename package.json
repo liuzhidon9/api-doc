@@ -1,5 +1,5 @@
 {
-  "name": "showdoc",
+  "name": "api-doc",
   "version": "1.0.0",
   "description": "`参考：https://www.showdoc.com.cn/page/741656402509783`",
   "main": "app.js",
@@ -11,7 +11,7 @@
     "start": "node app.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "909297022@qq.com",
   "license": "ISC",
   "dependencies": {
     "argparse": "^2.0.1",
