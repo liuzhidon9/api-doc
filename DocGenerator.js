@@ -167,8 +167,8 @@ class DocGenerator {
                 // lineArr类似 ['@catalog user','@title 获取验证码','@description 通过手机号获取验证码','@url /user/send_code','@method POST','@json_param {"phone_num":"13826031871"}','@param phone_num 必选 string 手机号']
                 lineArr.forEach(line => {
                     let paramArr = []
-                    paramArr = line.split(' ') //类似 [ '@param', 'phone_num', '必选', 'string', '手机号' ]
-                    let policyName = paramArr[0].substr(1)// 类似 param
+                    paramArr = line.split(/\s+/) //paramArr类似 [ '@param', 'phone_num', '必选', 'string', '手机号' ]
+                    let policyName = paramArr[0].substr(1)//policyName类似 param
                     docGenPolicy[policyName](paramArr)
                 })
 
