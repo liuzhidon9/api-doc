@@ -169,6 +169,9 @@ class DocGenerator {
                     let paramArr = []
                     paramArr = line.split(/\s+/) //paramArr类似 [ '@param', 'phone_num', '必选', 'string', '手机号' ]
                     let policyName = paramArr[0].substr(1)//policyName类似 param
+                    if (!docGenPolicy[policyName]) {
+                        throw new Error(`${filePath} > @${policyName} is not declare!!!`)
+                    }
                     docGenPolicy[policyName](paramArr)
                 })
 
@@ -177,18 +180,18 @@ class DocGenerator {
                     fs.mkdirSync(dir, { recursive: true })
                 }
 
-                let filePath = path.resolve(dir, docGenPolicy.page_title + '.md')
-                if (fs.existsSync(filePath)) { //如果要生成的文件已经存在，则先删除掉，后面再重新生成
-                    fs.unlinkSync(filePath)
+                let outputFilePath = path.resolve(dir, docGenPolicy.page_title + '.md')
+                if (fs.existsSync(outputFilePath)) { //如果要生成的文件已经存在，则先删除掉，后面再重新生成
+                    fs.unlinkSync(outputFilePath)
                 }
                 //遍历templates里的事件，通过它们的get方法可以获取到根据注释生成的文档
                 for (const key in docGenPolicy.templates) {
-                    fs.appendFileSync(path.resolve(process.cwd(), filePath), docGenPolicy.templates[key].get())
+                    fs.appendFileSync(path.resolve(process.cwd(), outputFilePath), docGenPolicy.templates[key].get())
                     docGenPolicy.page_content += docGenPolicy.templates[key].get()
                     docGenPolicy.templates[key].clear()
                 }
                 this._updateOnlineDoc(docGenPolicy.page_title)
-                docGenPolicy.page_content = null
+                docGenPolicy.page_content = ''
                 docGenPolicy.templates = {}
             })
 

@@ -1,7 +1,0 @@
-api_key: 4025902843df692d915d8d8881510800626236123
-api_token: c25c76a189126be16c3f2663505d5b2f1663873956
-server: https://www.showdoc.cc/server/api/item/updateByApi
-path: ./test
-output: ./api-doc
-exclude:
- - node_modules
