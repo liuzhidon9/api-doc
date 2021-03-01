@@ -132,70 +132,69 @@ class DocGenerator {
     }
 
     // 更新线上文档
-    _updateOnlineDoc(page_title) {
+    async _updateOnlineDoc(docGenPolicy) {
+        if (!this.api_key || !this.api_token || !this.server) return
+        let { page_title, cat_name, page_content, s_number } = docGenPolicy
         console.log(`正在更新线上文档：${page_title}`);
-        axios.post(this.server, {
+        let res = await axios.post(this.server, {
             api_key: this.api_key,
             api_token: this.api_token,
-            cat_name: docGenPolicy.cat_name,
-            page_title: docGenPolicy.page_title,
-            page_content: docGenPolicy.page_content,
-            s_number: docGenPolicy.s_number
-        }).then(res => {
-            if (res.data.error_code !== 0) { console.log(`线上文档：${page_title}>更新失败`); return }
-            console.log(`线上文档：${page_title}>更新成功！`);
-        }).catch(error => {
-            console.log(`线上文档：${page_title}>更新失败`, error.message);
+            cat_name: cat_name,
+            page_title: page_title,
+            page_content: page_content,
+            s_number: s_number
         })
+        if (res.data.error_code !== 0) { console.log(`线上文档：${page_title}>更新失败`); return }
+        console.log(`线上文档：${page_title}>更新成功！`);
     }
-    generateByFile(filePath) {
+
+    async generateByFile(filePath) {
         let docReg = /[/][*]{2}\s*api-doc\s*(@.*\s{1,2})*[*][/]/img
         let lineReg = /@.*/img
-        fs.readFile(filePath, (err, data) => {
-            if (err) throw err
-            let docArr = data.toString().match(docReg)
-            // console.log('docArr', docArr);
-            if (!docArr) return
-            let sectionArr = []
-            docArr.forEach(doc => {
-                sectionArr.push(doc.match(lineReg))
-            })
-            // console.log('sectionArr', sectionArr);
-            sectionArr.forEach(section => {
-                let lineArr = []
-                lineArr = section
-                // lineArr类似 ['@catalog user','@title 获取验证码','@description 通过手机号获取验证码','@url /user/send_code','@method POST','@json_param {"phone_num":"13826031871"}','@param phone_num 必选 string 手机号']
-                lineArr.forEach(line => {
-                    let paramArr = []
-                    paramArr = line.split(/\s+/) //paramArr类似 [ '@param', 'phone_num', '必选', 'string', '手机号' ]
-                    let policyName = paramArr[0].substr(1)//policyName类似 param
-                    if (!docGenPolicy[policyName]) {
-                        throw new Error(`${filePath} > @${policyName} is not declare!!!`)
-                    }
-                    docGenPolicy[policyName](paramArr)
-                })
+        let data = fs.readFileSync(filePath)
 
-                let dir = path.resolve(process.cwd(), this.output, docGenPolicy.cat_name)
-                if (!fs.existsSync(dir)) {//如果目录不存在则创建
-                    fs.mkdirSync(dir, { recursive: true })
-                }
-
-                let outputFilePath = path.resolve(dir, docGenPolicy.page_title + '.md')
-                if (fs.existsSync(outputFilePath)) { //如果要生成的文件已经存在，则先删除掉，后面再重新生成
-                    fs.unlinkSync(outputFilePath)
-                }
-                //遍历templates里的事件，通过它们的get方法可以获取到根据注释生成的文档
-                for (const key in docGenPolicy.templates) {
-                    fs.appendFileSync(path.resolve(process.cwd(), outputFilePath), docGenPolicy.templates[key].get())
-                    docGenPolicy.page_content += docGenPolicy.templates[key].get()
-                    docGenPolicy.templates[key].clear()
-                }
-                this._updateOnlineDoc(docGenPolicy.page_title)
-                docGenPolicy.page_content = ''
-                docGenPolicy.templates = {}
-            })
-
+        let docArr = data.toString().match(docReg)
+        // console.log('docArr', docArr);
+        if (!docArr) return
+        let sectionArr = []
+        docArr.forEach(doc => {
+            sectionArr.push(doc.match(lineReg))
         })
+        // console.log('sectionArr', sectionArr);
+        for (const section of sectionArr) {
+            // console.log(sectionArr);
+            // section类似 ['@catalog user','@title 获取验证码','@description 通过手机号获取验证码','@url /user/send_code','@method POST','@json_param {"phone_num":"13826031871"}','@param phone_num 必选 string 手机号']
+            section.forEach(line => {
+                let paramArr = []
+                paramArr = line.split(/\s+/) //paramArr类似 [ '@param', 'phone_num', '必选', 'string', '手机号' ]
+                let policyName = paramArr[0].substr(1)//policyName类似 param
+                if (!docGenPolicy[policyName]) {
+                    throw new Error(`${filePath} > @${policyName} is not declare!!!`)
+                }
+                docGenPolicy[policyName](paramArr)
+            })
+
+            let dir = path.resolve(process.cwd(), this.output, docGenPolicy.cat_name)
+            if (!fs.existsSync(dir)) {//如果目录不存在则创建
+                fs.mkdirSync(dir, { recursive: true })
+            }
+
+            let outputFilePath = path.resolve(dir, docGenPolicy.page_title + '.md')
+            if (fs.existsSync(outputFilePath)) { //如果要生成的文件已经存在，则先删除掉，后面再重新生成
+                fs.unlinkSync(outputFilePath)
+            }
+            //遍历templates里的事件，通过它们的get方法可以获取到根据注释生成的文档
+            for (const key in docGenPolicy.templates) {
+                fs.appendFileSync(path.resolve(process.cwd(), outputFilePath), docGenPolicy.templates[key].get())
+                docGenPolicy.page_content += docGenPolicy.templates[key].get()
+                docGenPolicy.templates[key].clear()
+            }
+            await this._updateOnlineDoc(docGenPolicy)
+            docGenPolicy.page_content = ''
+            docGenPolicy.templates = {}
+        }
+
+
     }
 }
 module.exports = DocGenerator

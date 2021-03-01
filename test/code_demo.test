@@ -1,0 +1,31 @@
+/**
+api-doc
+@catalog errorcode
+@title 公共错误
+@description 错误码
+@error_code 10000 RequestSuccess
+@error_code 10001 PageLessThan1
+@error_code 10002 TooManyElements
+@error_code 10003 StringTooLong
+@error_code 10004 PermissionDenied
+@error_code 10004 InsufficientCoin
+@error_code 10005 OutOfStock
+@error_code 10006 NotFound
+@error_code 10007 Duplicate
+*/
+
+/**
+api-doc
+@catalog errorcode
+@title 用户模块
+@description 错误码
+@error_code 19993 UserBanned
+@error_code 19993 NotImplement
+@error_code 19994 RequestTooFrequently
+@error_code 19995 AreaNotExits
+@error_code 19996 Unauthenticated
+@error_code 19997 RequireParametersIsNil
+@error_code 19998 RequestIllegal
+@error_code 19999 InnerError
+@error_code 9999 UserBannedRpcErrCode
+*/

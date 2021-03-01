@@ -1,24 +1,5 @@
 
 	
-
-/**
-api-doc
-@catalog user
-@title 注册
-@description 用户注册的接口
-@method post
-@url https://www.showdoc.com.cn/home/user/login
-@param username 必选 string 用户名  
-@param password 必选 string 密码  
-@param name 可选 string 用户昵称  
-@return {"error_code":0,"data":{"uid":"1","username":"12154545","name":"吴系挂","groupid":2,"reg_time":"1436864169","last_login_time":"0"}}
-@return_param groupid int 用户组id
-@return_param name string 用户昵称
-@error_code 10000 success
-@remark 这里是备注信息
-@number 99
-*/
-
 /**
 api-doc
 @catalog user
@@ -48,3 +29,32 @@ api-doc
 @param validata_code 必选 string 验证码
 @param email 必选 string 邮箱
 */
+
+/**
+api-doc
+@catalog user
+@title 用户登录
+@description 用户登录
+@url user/login
+@method POST
+@json_param {"username":"xxx","password":"123456","dev_info":{"device_code":"Ar94sojPESnbZwx7psYn3X-DCcDoVBk6nqMv-ZUhSDTo","device_category":1},"role":1}
+@param username 必选 string 账户名
+@param password 必选 string 密码
+@param device_code 必选 string 设备码
+@param device_category 必选 number 设备类别
+@param role 必选 string  用户身份，参考用户注册
+@return_param session_key string 保存着用户身份信息的会话钥匙
+@number 3
+*/
+
+/**
+api-doc
+@catalog user
+@title 退出登录
+@description 退出登录
+@url /user/logout
+@method POST
+@header Grpc-Metadata-sessionkey 必选 string 登录之后返回的session_key
+@number 5
+*/
+

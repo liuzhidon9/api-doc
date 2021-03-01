@@ -24,27 +24,45 @@ try {
 //     fs.rmdirSync(config.output, { recursive: true })
 // }
 
-let docGenerator = new DocGenerator(config.api_key, config.api_token, config.server,config.output)
+let docGenerator = new DocGenerator(config.api_key, config.api_token, config.server, config.output)
+class ApiDoc {
+    constructor(dirPath) {
+        this.dirPath = dirPath
 
-function scanFiles(relativePath) {
-    let files = fs.readdirSync(relativePath);
-    files.forEach(file => {
-        let fPath = path.join(relativePath, file)
-        let stat = fs.statSync(fPath)
+    }
+    scanFilesSync(dirPath) {
+        let filePathArr = []
+        function recursiveScan(dirPath) {
+            let files = fs.readdirSync(dirPath);
+            files.forEach(file => {
+                let fPath = path.join(dirPath, file)
+                let stat = fs.statSync(fPath)
 
-        // 检测需要忽略的文件
-        if (config.exclude.indexOf(file) !== -1) return
+                // 检测需要忽略的文件
+                if (config.exclude.indexOf(file) !== -1) return
 
-        //如果是目录则继续递归扫描
-        if (stat.isDirectory()) {
-            scanFiles(fPath)
-            return
+                //如果是目录则继续递归扫描
+                if (stat.isDirectory()) {
+                    recursiveScan(fPath)
+                    return
+                }
+                console.log('正在扫描' + file + '文件');
+                filePathArr.push(fPath)
+            })
         }
-        console.log('正在扫描' + file + '文件');
-        docGenerator.generateByFile(fPath)
-    })
+        recursiveScan(dirPath)
+        console.log('=====================================扫描完成！=====================================');
+        return filePathArr
+    }
+    async start() {
+        let filePathArr = this.scanFilesSync(this.dirPath)
+        for (const filePath of filePathArr) {
+            await docGenerator.generateByFile(filePath)
+        }
+        console.log('更新完毕！');
 
+    }
 }
-scanFiles(config.path)
 
+new ApiDoc(config.path).start()
 
